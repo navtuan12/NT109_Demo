@@ -21,25 +21,6 @@ public class Employee {
     private int age;
     private int salary;
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public void setSalary(int salary) {
-        this.salary = salary;
-    }
-
-    public ObjectId getObjectId() {
-        return objectId;
-    }
     public Employee(String id, String name, int age, int salary) {
         this.id = id;
         this.name = name;

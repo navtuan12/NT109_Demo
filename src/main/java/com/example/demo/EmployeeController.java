@@ -42,12 +42,13 @@ public class EmployeeController {
 
     // edit employee
     @PutMapping("/employee/{id}")
-    public ResponseEntity<Employee> editEmployee(@PathVariable(value = "id") String id,
+    public ResponseEntity<String> editEmployee(@PathVariable(value = "id") String id,
             @RequestBody Map<String, String> payload) {
-        return ResponseEntity.ok(employeeService.editEmployee(payload.get("id"),
+                employeeService.editEmployee(payload.get("id"),
                 payload.get("name"),
                 payload.get("age"),
-                payload.get("salary"), id));
+                payload.get("salary"), id);
+    return new ResponseEntity<String>("Employee updated successfully", HttpStatus.OK);
     }
 
     @DeleteMapping("/employee/{id}")
