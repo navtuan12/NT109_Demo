@@ -29,41 +29,29 @@ public class EmployeeService {
     }
     // add employee to database
 
-    public Employee addEmployee(String id, String name, String age, String salary) {
-        int iAge = Integer.parseInt(age);
-        int iSalary = Integer.parseInt(salary);
-        Employee employee = employeeRepository.insert(new Employee(id, name, iAge, iSalary));
+    public Employee addEmployee(Employee employee) {
+        employeeRepository.insert(employee);
         return employee;
     }
 
     // edit employee
-    public void editEmployee(String id, String name, String age, String salary, String employeeId) {
-        int iAge = Integer.parseInt(age);
-        int iSalary = Integer.parseInt(salary); 
-        
+    public void editEmployee(Employee employee, String employeeId) {
         Query select = Query.query(Criteria.where("id").is(employeeId));
         Update update = new Update();
-        update.set("id", id);
-        update.set("name", name);
-        update.set("age", iAge);
-        update.set("iSalary", iSalary);
+        update.set("name", employee.getName());
+        update.set("age", employee.getAge());
+        update.set("salary", employee.getSalary());
 
         mongoTemplate.update(Employee.class)
         .matching(select)
         .apply(update)
         .first();
     }
-
-    //find employee with most age
     
     //delete employee
     public void deleteEmployee(String id) {
         Employee employee = employeeRepository.findById(id);
         ObjectId employeeId = employee.getObjectId();
         employeeRepository.deleteById(employeeId);
-    }
-
-    public void deleteAllEmployees() {
-        employeeRepository.deleteAll();
     }
 }

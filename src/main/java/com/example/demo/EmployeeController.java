@@ -7,58 +7,50 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 
-@RestController
-@RequestMapping("/api/v1")
+
+
+@Controller
 public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
 
-    @GetMapping("/employee")
-    public ResponseEntity<List<Employee>> getAllEmployees() {
-        return new ResponseEntity<List<Employee>>(employeeService.allEmployees(), HttpStatus.OK);
+    @GetMapping("/")
+    public String index(@ModelAttribute("model") ModelMap model) {
+        model.addAttribute("employees", employeeService.allEmployees());
+        return "index";
     }
 
-    @GetMapping("/employee/{id}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable String id) {
-        return new ResponseEntity<Employee>(employeeService.getEmployeeById(id), HttpStatus.OK);
+    @PostMapping("/add") 
+    public String addEmployee(Employee employee) {
+        employeeService.addEmployee(employee);
+        return "redirect:/";
     }
 
-    @PostMapping("/employee")
-    public ResponseEntity<Employee> addEmployee(@RequestBody Map<String, String> payload) {
-        return new ResponseEntity<Employee>(employeeService.addEmployee(payload.get("id"), payload.get("name"),
-                payload.get("age"), payload.get("salary")), HttpStatus.CREATED);
+    @GetMapping("/edit/{id}")
+    public String editEmployee(@PathVariable("id") String id, Employee employee) {
+        employee.setId(id);
+        employeeService.editEmployee(employee, id);
+        return "redirect:/";
     }
-
-    // edit employee
-    @PutMapping("/employee/{id}")
-    public ResponseEntity<String> editEmployee(@PathVariable(value = "id") String id,
-            @RequestBody Map<String, String> payload) {
-        employeeService.editEmployee(payload.get("id"),
-                payload.get("name"),
-                payload.get("age"),
-                payload.get("salary"), id);
-        return new ResponseEntity<String>("Edit sucessfully", HttpStatus.OK);
-    }
-
-    @DeleteMapping("/employee/{id}")
-    public ResponseEntity<String> deleteEmployee(@PathVariable String id) {
+ 
+    @GetMapping("/delete/{id}")
+    public String deleteEmployee(@PathVariable String id) {
         employeeService.deleteEmployee(id);
-        return new ResponseEntity<String>("Employee deleted successfully", HttpStatus.OK);
-    }
-
-    @DeleteMapping("/employee")
-    public ResponseEntity<String> deleteAllEmployees() {
-        employeeService.deleteAllEmployees();
-        return new ResponseEntity<String>("All Employees deleted successfully", HttpStatus.OK);
+        return "redirect:/";
     }
 }
