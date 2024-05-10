@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @RequestMapping("/api/v1")
 public class EmployeeController {
@@ -34,7 +33,7 @@ public class EmployeeController {
         return new ResponseEntity<Employee>(employeeService.getEmployeeById(id), HttpStatus.OK);
     }
 
-    @PostMapping("/employee") 
+    @PostMapping("/employee")
     public ResponseEntity<Employee> addEmployee(@RequestBody Map<String, String> payload) {
         return new ResponseEntity<Employee>(employeeService.addEmployee(payload.get("id"), payload.get("name"),
                 payload.get("age"), payload.get("salary")), HttpStatus.CREATED);
@@ -42,12 +41,13 @@ public class EmployeeController {
 
     // edit employee
     @PutMapping("/employee/{id}")
-    public ResponseEntity<Employee> editEmployee(@PathVariable(value = "id") String id,
+    public ResponseEntity<String> editEmployee(@PathVariable(value = "id") String id,
             @RequestBody Map<String, String> payload) {
-        return ResponseEntity.ok(employeeService.editEmployee(payload.get("id"),
+        employeeService.editEmployee(payload.get("id"),
                 payload.get("name"),
                 payload.get("age"),
-                payload.get("salary"), id));
+                payload.get("salary"), id);
+        return new ResponseEntity<String>("Edit sucessfully", HttpStatus.OK);
     }
 
     @DeleteMapping("/employee/{id}")
