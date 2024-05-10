@@ -29,10 +29,8 @@ public class EmployeeService {
     }
     // add employee to database
 
-    public Employee addEmployee(String id, String name, String age, String salary) {
-        int iAge = Integer.parseInt(age);
-        int iSalary = Integer.parseInt(salary);
-        Employee employee = employeeRepository.insert(new Employee(id, name, iAge, iSalary));
+    public Employee addEmployee(Employee employee) {
+        employeeRepository.insert(employee);
         return employee;
     }
 
@@ -59,9 +57,5 @@ public class EmployeeService {
         Employee employee = employeeRepository.findById(id);
         ObjectId employeeId = employee.getObjectId();
         employeeRepository.deleteById(employeeId);
-    }
-
-    public void deleteAllEmployees() {
-        employeeRepository.deleteAll();
     }
 }
